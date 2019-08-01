@@ -22,3 +22,5 @@ class DangdangspiderItem(scrapy.Item):
     picture_name = scrapy.Field()
 
     img_urls = scrapy.Field()
+    img_url = scrapy.Field()
+

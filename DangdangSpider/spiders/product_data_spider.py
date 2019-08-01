@@ -106,6 +106,7 @@ class ProductDataSpiderSpider(scrapy.Spider):
         picture_name = item['picture_name']
         picture_name = bigimg + picture_name
         img_urls = picture_name
+        img_urls = list(filter(None, img_urls))
         item['img_urls'] = img_urls
 
         # print(picture_name)
