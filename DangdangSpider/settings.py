@@ -55,6 +55,7 @@ COOKIES_ENABLED = False
 DOWNLOADER_MIDDLEWARES = {
    'DangdangSpider.middlewares.DangdangspiderDownloaderMiddleware': 543,
    'DangdangSpider.middlewares.MyUserAgentMiddleware': 400,
+#     代理
 }
 
 # Enable or disable extensions
@@ -74,7 +75,7 @@ IMAGES_STORE = 'C:/python_workspace/scrapy_project/Dangdangspider/'
 RETRY_ENABLE = True
 RETRY_TIMES = 7
 RETRY_HTTP_CODECS = [500, 502, 503, 504, 408, 302, 301, 404, 403]
-
+# 重试
 DOWNLOAD_TIMEOUT = 300
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
