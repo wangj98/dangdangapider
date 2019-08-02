@@ -16,6 +16,7 @@ from scrapy.utils.project import get_project_settings
 import os
 from DangdangSpider.items import DangdangspiderItem
 import re
+import hashlib
 
 class DangdangspiderPipeline(object):
     def __init__(self, dbpool):
@@ -46,33 +47,37 @@ class DangdangspiderPipeline(object):
                   item['store_name'], item['picture_name'])
         tx.execute(sql, params)
 
+
 class DangdangspiderIamgePipeline(ImagesPipeline):
-    img_store = get_project_settings().get('IMAGES_STORE')
 
 
     def get_media_requests(self, item, info):
         for img_url in item['img_urls']:
-            item = DangdangspiderItem()
             item['img_url'] = img_url
             item_name = item['item_name']
-            item = DangdangspiderItem(img_url=img_url, item_name=item_name)
-
+            cate1 = item['cate1']
+            item = DangdangspiderItem(img_url=img_url, item_name=item_name, cate1=cate1)
             yield scrapy.Request(url=img_url, meta={'item': item})
 
 
     def file_path(self, request, response=None, info=None):
         item = request.meta['item']
-        img_url = item['img_url']
-        print('2434res-----------')
+        sha1 = item['img_url']
 
-        item_name = (item['item_name']).replace('/', '_').replace('|', '_').replace('*', '')
-        print('-------------------------efwe----')
-        cate1 = (item['cate1']).replace('/', '_')
-        cate2 = (item['cate2']).replace('/', '_')
-        cate3 = (item['cate3']).replace('/', '_')
+        # item_name = (item['item_name']).replace('/', '_').replace('|', '_').replace('*', '').replace(':', '_')
+        cate1 = (item['cate1']).replace('图书', 'book').replace('音像/杂志', 'Audiovisual_magazine').replace('电子书/网文/听书', 'E-books_web texts_listening books').replace('男女装/内衣', 'Men and women wear_underwear').replace('鞋', 'shoes').\
+            replace('运动户外', 'Exercise outdoors').replace('箱包皮具', 'Luggage leather').replace('当当优品', 'dangdang_superior products').replace('母婴用品', ' maternal and infant supplies').replace('孕妈专区', 'Pregnant mother zone').replace('童装童鞋', 'Children wear children shoes').replace('玩具童车', 'The toy stroller').\
+            replace('家居家纺', 'Household textile').replace('家具/家装/家饰', 'Furniture_home decoration_decoration').replace('汽车用品', 'automobile accessories').replace('时尚美妆', 'Fashionable beauty makeup').replace('珠宝饰品', 'jewelry').replace('手表/眼镜/礼品', 'Watch_glasses_gift').replace('食品', 'food').\
+            replace('健康/营养/保健', 'Health_nutrition_health care').replace('手机通讯', 'Mobile communications').replace('数码影音', 'Digital audio').replace('电脑办公', 'computer_office').replace('家用电器', 'household appliances').replace('大家电', 'Large Appliance').replace('海外购', 'Accesories').\
+            replace('地方特色', 'local_feature').replace('文化创意用品', 'Cultural and creative supplies')
+        # cate2 = (item['cate2']).replace('/', '_')
+        # cate3 = (item['cate3']).replace('/', '_')
+        sha1 = hashlib.sha1()
+        sha1.update(item['img_url'].encode('utf8'))
 
-        apath = "./" + cate1 + '/' + cate2 + '/' + cate3 + '/' + item_name
-        path = apath + '/'  + '.jpg'
+        apath = "./" + cate1
+        path = apath + '/' + sha1.hexdigest() + '.jpg'
+
         return path
 
     def item_completed(self, results, item, info):

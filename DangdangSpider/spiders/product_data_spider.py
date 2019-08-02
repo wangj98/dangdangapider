@@ -30,7 +30,7 @@ class ProductDataSpiderSpider(scrapy.Spider):
         html1 = Selector(response)
         qid = html1.xpath("//ul[@class= 'bigimg cloth_shoplist']/li/@id").extract()
         # print(qid)
-        item = scrapy.Field()
+        item = DangdangspiderItem()
         if qid != None:
             for aid in qid:
                 item['aid'] = int(aid)
@@ -81,11 +81,9 @@ class ProductDataSpiderSpider(scrapy.Spider):
         picture_name = item_url.xpath("//*[@id='main-img-slider']/li/a/@data-imghref").extract()
         item['picture_name'] = picture_name
         # print(picture_name)
-
         aid = item['aid']
         item = DangdangspiderItem(aid=aid, cate1=cate1, cate2=cate2, cate3=cate3, price=price, item_name=item_name,
-                          store_name=store_name, picture_name=picture_name)
-
+                                  store_name=store_name, picture_name=picture_name)
         a = ','.join(item_url.xpath("/html/body/script[1]/text()").extract()).replace('\n', '')
         productId = str(re.findall('"productId":"(\d*)', a))
         categoryPath = str(re.findall('"categoryPath":"(.*?)"', a))
@@ -102,9 +100,18 @@ class ProductDataSpiderSpider(scrapy.Spider):
         html = Selector(response)
         item = response.meta['item']
         bigimg = html.xpath('/html/body//img/@data-original').extract()
-
         picture_name = item['picture_name']
-        picture_name = bigimg + picture_name
+
+
+        if isinstance(bigimg,str):
+            picture_name.append(bigimg)
+            print('-----------------------')
+        elif isinstance(picture_name, str):
+            bigimg.append(picture_name)
+            picture_name = bigimg
+        else:
+            picture_name = picture_name + bigimg
+
         img_urls = picture_name
         img_urls = list(filter(None, img_urls))
         item['img_urls'] = img_urls

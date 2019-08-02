@@ -72,7 +72,7 @@ ITEM_PIPELINES = {
 IMAGES_STORE = 'C:/python_workspace/scrapy_project/Dangdangspider/'
 
 RETRY_ENABLE = True
-RETRY_TIMES = 100
+RETRY_TIMES = 7
 RETRY_HTTP_CODECS = [500, 502, 503, 504, 408, 302, 301, 404, 403]
 
 DOWNLOAD_TIMEOUT = 300
