@@ -68,7 +68,7 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'DangdangSpider.pipelines.DangdangspiderPipeline': 3,
-   'DangdangSpider.pipelines.DangdangspiderIamgePipeline': 4,
+   'DangdangSpider.pipelines.DangdangspiderImagePipeline': 4,
 }
 IMAGES_STORE = 'C:/python_workspace/scrapy_project/Dangdangspider/'
 

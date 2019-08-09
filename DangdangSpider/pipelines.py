@@ -5,16 +5,16 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import scrapy
-import codecs
 import pymysql
+import codecs
 import pymysql.cursors
 from twisted.enterprise import adbapi
+from DangdangSpider.items import DangdangspiderItem
 
-from scrapy.pipelines.images import ImagesPipeline
 from DangdangSpider.settings import IMAGES_STORE as images_store
+from scrapy.pipelines.images import ImagesPipeline
 from scrapy.utils.project import get_project_settings
 import os
-from DangdangSpider.items import DangdangspiderItem
 import re
 import hashlib
 
@@ -48,7 +48,8 @@ class DangdangspiderPipeline(object):
         tx.execute(sql, params)
 #         数据存入数据库中
 
-class DangdangspiderIamgePipeline(ImagesPipeline):
+
+class DangdangspiderImagePipeline(ImagesPipeline):
 
 
     def get_media_requests(self, item, info):
@@ -90,8 +91,8 @@ class DangdangspiderIamgePipeline(ImagesPipeline):
         sha1 = hashlib.sha1()
         sha1.update(item['img_url'].encode('utf8'))
         # 将URL转化为哈希值当做图片名
-        apath = "./" + cate1
-        path = apath + '/' + sha1.hexdigest() + '.jpg'
+        apath = "./" + cate1 + '/'
+        path = apath + sha1.hexdigest() + '.jpg'
         # 存储路径
 
         return path
